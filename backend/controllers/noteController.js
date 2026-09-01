@@ -44,7 +44,76 @@ const getNotes = async (req, res) => {
     }
 };
 
+// Update a note
+const updateNote = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { title, subject, content } = req.body;
+
+        const note = await Note.findByIdAndUpdate(
+            id,
+            {
+                title,
+                subject,
+                content
+            },
+            {
+                new: true,
+                runValidators: true
+            }
+        );
+
+        if (!note) {
+            return res.status(404).json({
+                success: false,
+                message: "Note not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Note updated successfully",
+            data: note
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to update note",
+            error: error.message
+        });
+    }
+};
+
+// Delete a note
+const deleteNote = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const note = await Note.findByIdAndDelete(id);
+
+        if (!note) {
+            return res.status(404).json({
+                success: false,
+                message: "Note not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: "Note deleted successfully"
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Failed to delete note",
+            error: error.message
+        });
+    }
+};
+
 module.exports = {
     createNote,
-    getNotes
+    getNotes,
+    updateNote,
+    deleteNote
 };
