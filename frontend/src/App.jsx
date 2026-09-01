@@ -14,6 +14,9 @@ function App() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedSubject, setSelectedSubject] = useState("All");
+
     const [formData, setFormData] = useState({
         title: "",
         subject: "",
@@ -103,6 +106,27 @@ function App() {
         });
     };
 
+    const subjects = [
+        "All",
+        ...new Set(notes.map((note) => note.subject))
+    ];
+
+    const filteredNotes = notes.filter((note) => {
+        const matchesSearch =
+            note.title
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase()) ||
+            note.content
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase());
+
+        const matchesSubject =
+            selectedSubject === "All" ||
+            note.subject === selectedSubject;
+
+        return matchesSearch && matchesSubject;
+    });
+
     return (
         <div>
             <header>
@@ -122,10 +146,36 @@ function App() {
                 />
 
                 <section>
+                    <h2>Search and Filter Notes</h2>
+
+                    <input
+                        type="text"
+                        placeholder="Search notes..."
+                        value={searchTerm}
+                        onChange={(event) =>
+                            setSearchTerm(event.target.value)
+                        }
+                    />
+
+                    <select
+                        value={selectedSubject}
+                        onChange={(event) =>
+                            setSelectedSubject(event.target.value)
+                        }
+                    >
+                        {subjects.map((subject) => (
+                            <option key={subject} value={subject}>
+                                {subject}
+                            </option>
+                        ))}
+                    </select>
+                </section>
+
+                <section>
                     <h2>My Notes</h2>
 
                     <NoteList
-                        notes={notes}
+                        notes={filteredNotes}
                         loading={loading}
                         onEdit={handleEdit}
                         onDelete={handleDelete}
