@@ -1,6 +1,11 @@
 function NoteList({ notes, loading, onEdit, onDelete }) {
     if (loading) {
-        return <p>Loading notes...</p>;
+        return (
+            <div className="loading-state">
+                <div className="loading-spinner"></div>
+                <p>Loading notes...</p>
+            </div>
+        );
     }
 
     if (notes.length === 0) {
