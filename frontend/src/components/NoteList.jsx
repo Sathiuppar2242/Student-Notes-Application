@@ -4,27 +4,33 @@ function NoteList({ notes, loading, onEdit, onDelete }) {
     }
 
     if (notes.length === 0) {
-        return <p>No notes available. Create your first note!</p>;
+        return (
+            <div className="empty-state">
+                No notes available. Create your first note!
+            </div>
+        );
     }
 
     return (
-        <div>
+        <div className="notes-grid">
             {notes.map((note) => (
-                <article key={note._id}>
+                <article className="note-card" key={note._id}>
                     <h3>{note.title}</h3>
 
-                    <p>
-                        <strong>Subject:</strong> {note.subject}
+                    <span className="note-subject">
+                        {note.subject}
+                    </span>
+
+                    <p className="note-content">
+                        {note.content}
                     </p>
 
-                    <p>{note.content}</p>
-
-                    <small>
+                    <small className="note-date">
                         Created:{" "}
                         {new Date(note.createdAt).toLocaleString()}
                     </small>
 
-                    <div>
+                    <div className="note-actions">
                         <button onClick={() => onEdit(note)}>
                             Edit
                         </button>

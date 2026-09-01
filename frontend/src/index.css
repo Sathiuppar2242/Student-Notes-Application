@@ -146,3 +146,57 @@ article small {
     border-radius: 6px;
     margin-bottom: 20px;
 }
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 18px;
+}
+
+.note-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: white;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.note-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.note-card h3 {
+    margin-bottom: 10px;
+}
+
+.note-subject {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 5px 10px;
+    border-radius: 15px;
+    background-color: #e0e7ff;
+    color: #3730a3;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.note-content {
+    line-height: 1.6;
+    margin-bottom: 14px;
+}
+
+.note-date {
+    display: block;
+    color: #6b7280;
+    font-size: 12px;
+    margin-bottom: 15px;
+}
+
+.note-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.note-actions button {
+    margin-right: 0;
+}
