@@ -6,46 +6,80 @@ function NoteForm({
     onCancel
 }) {
     return (
-        <section>
-            <h2>{editingId ? "Edit Note" : "Create Note"}</h2>
+        <section className="note-form-section">
+            <div className="form-header">
+                <h2>{editingId ? "Edit Note" : "Create Note"}</h2>
 
-            <form onSubmit={onSubmit}>
-                <input
-                    type="text"
-                    name="title"
-                    placeholder="Note title"
-                    value={formData.title}
-                    onChange={onChange}
-                    required
-                />
+                <p>
+                    {editingId
+                        ? "Update your existing study note."
+                        : "Add a new note to your collection."}
+                </p>
+            </div>
 
-                <input
-                    type="text"
-                    name="subject"
-                    placeholder="Subject"
-                    value={formData.subject}
-                    onChange={onChange}
-                    required
-                />
+            <form onSubmit={onSubmit} className="note-form">
+                <div className="form-group">
+                    <label htmlFor="title">
+                        Note Title
+                    </label>
 
-                <textarea
-                    name="content"
-                    placeholder="Write your note..."
-                    value={formData.content}
-                    onChange={onChange}
-                    required
-                    rows="6"
-                />
+                    <input
+                        id="title"
+                        type="text"
+                        name="title"
+                        placeholder="Enter note title"
+                        value={formData.title}
+                        onChange={onChange}
+                        required
+                    />
+                </div>
 
-                <button type="submit">
-                    {editingId ? "Update Note" : "Add Note"}
-                </button>
+                <div className="form-group">
+                    <label htmlFor="subject">
+                        Subject
+                    </label>
 
-                {editingId && (
-                    <button type="button" onClick={onCancel}>
-                        Cancel
+                    <input
+                        id="subject"
+                        type="text"
+                        name="subject"
+                        placeholder="Enter subject"
+                        value={formData.subject}
+                        onChange={onChange}
+                        required
+                    />
+                </div>
+
+                <div className="form-group">
+                    <label htmlFor="content">
+                        Note Content
+                    </label>
+
+                    <textarea
+                        id="content"
+                        name="content"
+                        placeholder="Write your note here..."
+                        value={formData.content}
+                        onChange={onChange}
+                        required
+                        rows="7"
+                    />
+                </div>
+
+                <div className="form-actions">
+                    <button type="submit">
+                        {editingId ? "Update Note" : "Add Note"}
                     </button>
-                )}
+
+                    {editingId && (
+                        <button
+                            type="button"
+                            onClick={onCancel}
+                        >
+                            Cancel
+                        </button>
+                    )}
+                </div>
             </form>
         </section>
     );
