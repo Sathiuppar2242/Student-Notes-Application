@@ -121,6 +121,11 @@ function App() {
         });
     };
 
+    const clearSearch = () => {
+        setSearchTerm("");
+        setSelectedSubject("All");
+    };
+
     const subjects = [
         "All",
         ...new Set(notes.map((note) => note.subject))
@@ -191,6 +196,13 @@ function App() {
                                 </option>
                             ))}
                         </select>
+
+                        <button
+                            type="button"
+                            onClick={clearSearch}
+                        >
+                            Clear Search
+                        </button>
                     </div>
                 </section>
 
