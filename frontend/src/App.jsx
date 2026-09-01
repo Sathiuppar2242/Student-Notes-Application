@@ -112,13 +112,12 @@ function App() {
     ];
 
     const filteredNotes = notes.filter((note) => {
+        const search = searchTerm.toLowerCase();
+
         const matchesSearch =
-            note.title
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase()) ||
-            note.content
-                .toLowerCase()
-                .includes(searchTerm.toLowerCase());
+            note.title.toLowerCase().includes(search) ||
+            note.content.toLowerCase().includes(search) ||
+            note.subject.toLowerCase().includes(search);
 
         const matchesSubject =
             selectedSubject === "All" ||
@@ -135,7 +134,11 @@ function App() {
             </header>
 
             <main>
-                {error && <p>{error}</p>}
+                {error && (
+                    <p className="error-message">
+                        {error}
+                    </p>
+                )}
 
                 <NoteForm
                     formData={formData}
@@ -148,38 +151,49 @@ function App() {
                 <section>
                     <h2>Search and Filter Notes</h2>
 
-                    <input
-                        type="text"
-                        placeholder="Search notes..."
-                        value={searchTerm}
-                        onChange={(event) =>
-                            setSearchTerm(event.target.value)
-                        }
-                    />
+                    <div className="search-controls">
+                        <input
+                            type="text"
+                            placeholder="Search notes..."
+                            value={searchTerm}
+                            onChange={(event) =>
+                                setSearchTerm(event.target.value)
+                            }
+                        />
 
-                    <select
-                        value={selectedSubject}
-                        onChange={(event) =>
-                            setSelectedSubject(event.target.value)
-                        }
-                    >
-                        {subjects.map((subject) => (
-                            <option key={subject} value={subject}>
-                                {subject}
-                            </option>
-                        ))}
-                    </select>
+                        <select
+                            value={selectedSubject}
+                            onChange={(event) =>
+                                setSelectedSubject(event.target.value)
+                            }
+                        >
+                            {subjects.map((subject) => (
+                                <option
+                                    key={subject}
+                                    value={subject}
+                                >
+                                    {subject}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                 </section>
 
                 <section>
                     <h2>My Notes</h2>
 
-                    <NoteList
-                        notes={filteredNotes}
-                        loading={loading}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                    />
+                    {filteredNotes.length === 0 && !loading ? (
+                        <div className="empty-state">
+                            No notes match your search or filter.
+                        </div>
+                    ) : (
+                        <NoteList
+                            notes={filteredNotes}
+                            loading={loading}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
+                        />
+                    )}
                 </section>
             </main>
         </div>

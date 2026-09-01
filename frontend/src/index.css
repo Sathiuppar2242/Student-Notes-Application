@@ -108,3 +108,41 @@ article small {
     margin-bottom: 12px;
     color: #6b7280;
 }
+.search-controls {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.search-controls input {
+    flex: 2;
+    min-width: 220px;
+}
+
+.search-controls select {
+    flex: 1;
+    min-width: 180px;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background-color: white;
+    outline: none;
+}
+
+.search-controls select:focus {
+    border-color: #2563eb;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 25px;
+    color: #6b7280;
+}
+
+.error-message {
+    background-color: #fee2e2;
+    color: #991b1b;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
