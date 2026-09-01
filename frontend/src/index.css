@@ -240,3 +240,31 @@ article small {
         width: 100%;
     }
 }
+.notes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 18px;
+}
+
+.notes-header h2 {
+    margin-bottom: 0;
+}
+
+.note-count {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background-color: #e0e7ff;
+    color: #3730a3;
+    font-size: 14px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+    .notes-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

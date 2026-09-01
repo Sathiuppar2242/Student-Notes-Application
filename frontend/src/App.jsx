@@ -33,7 +33,9 @@ function App() {
             const response = await getNotes();
             setNotes(response.data);
         } catch (err) {
-            setError("Unable to load notes. Please check the backend.");
+            setError(
+                "Unable to load notes. Please check the backend."
+            );
         } finally {
             setLoading(false);
         }
@@ -69,7 +71,7 @@ function App() {
                 content: ""
             });
 
-            loadNotes();
+            await loadNotes();
         } catch (err) {
             setError("Unable to save note.");
         }
@@ -83,6 +85,11 @@ function App() {
             subject: note.subject,
             content: note.content
         });
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
     };
 
     const handleDelete = async (id) => {
@@ -90,7 +97,7 @@ function App() {
             setError("");
 
             await deleteNote(id);
-            loadNotes();
+            await loadNotes();
         } catch (err) {
             setError("Unable to delete note.");
         }
@@ -180,7 +187,16 @@ function App() {
                 </section>
 
                 <section>
-                    <h2>My Notes</h2>
+                    <div className="notes-header">
+                        <h2>My Notes</h2>
+
+                        <span className="note-count">
+                            {filteredNotes.length}{" "}
+                            {filteredNotes.length === 1
+                                ? "Note"
+                                : "Notes"}
+                        </span>
+                    </div>
 
                     {filteredNotes.length === 0 && !loading ? (
                         <div className="empty-state">
