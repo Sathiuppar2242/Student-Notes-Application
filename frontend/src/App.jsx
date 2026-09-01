@@ -6,6 +6,9 @@ import {
     deleteNote
 } from "./services/noteService";
 
+import NoteForm from "./components/NoteForm";
+import NoteList from "./components/NoteList";
+
 function App() {
     const [notes, setNotes] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -108,100 +111,25 @@ function App() {
             </header>
 
             <main>
-                <section>
-                    <h2>{editingId ? "Edit Note" : "Create Note"}</h2>
+                {error && <p>{error}</p>}
 
-                    <form onSubmit={handleSubmit}>
-                        <input
-                            type="text"
-                            name="title"
-                            placeholder="Note title"
-                            value={formData.title}
-                            onChange={handleChange}
-                            required
-                        />
-
-                        <input
-                            type="text"
-                            name="subject"
-                            placeholder="Subject"
-                            value={formData.subject}
-                            onChange={handleChange}
-                            required
-                        />
-
-                        <textarea
-                            name="content"
-                            placeholder="Write your note..."
-                            value={formData.content}
-                            onChange={handleChange}
-                            required
-                            rows="6"
-                        />
-
-                        <button type="submit">
-                            {editingId ? "Update Note" : "Add Note"}
-                        </button>
-
-                        {editingId && (
-                            <button
-                                type="button"
-                                onClick={handleCancelEdit}
-                            >
-                                Cancel
-                            </button>
-                        )}
-                    </form>
-                </section>
+                <NoteForm
+                    formData={formData}
+                    editingId={editingId}
+                    onChange={handleChange}
+                    onSubmit={handleSubmit}
+                    onCancel={handleCancelEdit}
+                />
 
                 <section>
                     <h2>My Notes</h2>
 
-                    {error && <p>{error}</p>}
-
-                    {loading ? (
-                        <p>Loading notes...</p>
-                    ) : notes.length === 0 ? (
-                        <p>No notes available. Create your first note!</p>
-                    ) : (
-                        notes.map((note) => (
-                            <article key={note._id}>
-                                <h3>{note.title}</h3>
-
-                                <p>
-                                    <strong>Subject:</strong>{" "}
-                                    {note.subject}
-                                </p>
-
-                                <p>{note.content}</p>
-
-                                <small>
-                                    Created:{" "}
-                                    {new Date(
-                                        note.createdAt
-                                    ).toLocaleString()}
-                                </small>
-
-                                <div>
-                                    <button
-                                        onClick={() =>
-                                            handleEdit(note)
-                                        }
-                                    >
-                                        Edit
-                                    </button>
-
-                                    <button
-                                        onClick={() =>
-                                            handleDelete(note._id)
-                                        }
-                                    >
-                                        Delete
-                                    </button>
-                                </div>
-                            </article>
-                        ))
-                    )}
+                    <NoteList
+                        notes={notes}
+                        loading={loading}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                    />
                 </section>
             </main>
         </div>
