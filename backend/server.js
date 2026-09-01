@@ -14,6 +14,14 @@ app.use(express.json());
 
 connectDB();
 
+// Health check
+app.get("/api/health", (req, res) => {
+    res.status(200).json({
+        success: true,
+        message: "Student Notes API is healthy"
+    });
+});
+
 // API routes
 app.use("/api/notes", noteRoutes);
 
