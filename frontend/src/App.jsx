@@ -1,122 +1,211 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react";
+import {
+    getNotes,
+    createNote,
+    updateNote,
+    deleteNote
+} from "./services/noteService";
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [notes, setNotes] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
+    const [formData, setFormData] = useState({
+        title: "",
+        subject: "",
+        content: ""
+    });
+
+    const [editingId, setEditingId] = useState(null);
+
+    const loadNotes = async () => {
+        try {
+            setLoading(true);
+            setError("");
+
+            const response = await getNotes();
+            setNotes(response.data);
+        } catch (err) {
+            setError("Unable to load notes. Please check the backend.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        loadNotes();
+    }, []);
+
+    const handleChange = (event) => {
+        setFormData({
+            ...formData,
+            [event.target.name]: event.target.value
+        });
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        try {
+            setError("");
+
+            if (editingId) {
+                await updateNote(editingId, formData);
+                setEditingId(null);
+            } else {
+                await createNote(formData);
+            }
+
+            setFormData({
+                title: "",
+                subject: "",
+                content: ""
+            });
+
+            loadNotes();
+        } catch (err) {
+            setError("Unable to save note.");
+        }
+    };
+
+    const handleEdit = (note) => {
+        setEditingId(note._id);
+
+        setFormData({
+            title: note.title,
+            subject: note.subject,
+            content: note.content
+        });
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            setError("");
+
+            await deleteNote(id);
+            loadNotes();
+        } catch (err) {
+            setError("Unable to delete note.");
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditingId(null);
+
+        setFormData({
+            title: "",
+            subject: "",
+            content: ""
+        });
+    };
+
+    return (
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
+            <header>
+                <h1>Student Notes Application</h1>
+                <p>Organize your study notes by subject</p>
+            </header>
 
-      <div className="ticks"></div>
+            <main>
+                <section>
+                    <h2>{editingId ? "Edit Note" : "Create Note"}</h2>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+                    <form onSubmit={handleSubmit}>
+                        <input
+                            type="text"
+                            name="title"
+                            placeholder="Note title"
+                            value={formData.title}
+                            onChange={handleChange}
+                            required
+                        />
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+                        <input
+                            type="text"
+                            name="subject"
+                            placeholder="Subject"
+                            value={formData.subject}
+                            onChange={handleChange}
+                            required
+                        />
+
+                        <textarea
+                            name="content"
+                            placeholder="Write your note..."
+                            value={formData.content}
+                            onChange={handleChange}
+                            required
+                            rows="6"
+                        />
+
+                        <button type="submit">
+                            {editingId ? "Update Note" : "Add Note"}
+                        </button>
+
+                        {editingId && (
+                            <button
+                                type="button"
+                                onClick={handleCancelEdit}
+                            >
+                                Cancel
+                            </button>
+                        )}
+                    </form>
+                </section>
+
+                <section>
+                    <h2>My Notes</h2>
+
+                    {error && <p>{error}</p>}
+
+                    {loading ? (
+                        <p>Loading notes...</p>
+                    ) : notes.length === 0 ? (
+                        <p>No notes available. Create your first note!</p>
+                    ) : (
+                        notes.map((note) => (
+                            <article key={note._id}>
+                                <h3>{note.title}</h3>
+
+                                <p>
+                                    <strong>Subject:</strong>{" "}
+                                    {note.subject}
+                                </p>
+
+                                <p>{note.content}</p>
+
+                                <small>
+                                    Created:{" "}
+                                    {new Date(
+                                        note.createdAt
+                                    ).toLocaleString()}
+                                </small>
+
+                                <div>
+                                    <button
+                                        onClick={() =>
+                                            handleEdit(note)
+                                        }
+                                    >
+                                        Edit
+                                    </button>
+
+                                    <button
+                                        onClick={() =>
+                                            handleDelete(note._id)
+                                        }
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
+                            </article>
+                        ))
+                    )}
+                </section>
+            </main>
+        </div>
+    );
 }
 
-export default App
+export default App;
