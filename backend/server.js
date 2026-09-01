@@ -3,6 +3,7 @@ const cors = require("cors");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const noteRoutes = require("./routes/noteRoutes");
+const errorHandler = require("./middleware/errorMiddleware");
 
 dotenv.config();
 
@@ -21,6 +22,9 @@ app.get("/", (req, res) => {
         message: "Student Notes API is running successfully"
     });
 });
+
+// Centralized error handler
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
