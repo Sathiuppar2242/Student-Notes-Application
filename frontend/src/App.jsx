@@ -220,6 +220,12 @@ function App() {
                     )}
                 </section>
             </main>
+
+            <footer>
+                <p>
+                    Student Notes Application © 2026
+                </p>
+            </footer>
         </div>
     );
 }

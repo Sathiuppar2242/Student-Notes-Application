@@ -362,3 +362,15 @@ article small {
         transform: rotate(360deg);
     }
 }
+footer {
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+    background-color: #1f2937;
+    color: #d1d5db;
+    font-size: 14px;
+}
+
+footer p {
+    margin: 0;
+}
